@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Commerce Store</title>
+  
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  
+  <!-- Custom External Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar text-center py-2">
+    <span>⚡ FLASH SALE: Get Up To 50% Off On Selected Tech & Apparel!</span>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <span class="brand-logo-icon"><i class="fa-solid fa-bolt"></i></span>
+        <span class="brand-name">BALA<span class="text-turquoise">STORE</span></span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="search-box-wrapper mx-lg-4 my-2 my-lg-0 flex-grow-1 max-w-500">
+        <div class="input-group">
+          <span class="input-group-text search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input type="text" id="searchInput" class="form-control custom-search-input" placeholder="Search products, brands, categories..." />
+          <button class="btn btn-clear-search d-none" id="clearSearchBtn" type="button"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-cart-trigger position-relative" id="cartOpenBtn" data-bs-toggle="offcanvas" data-bs-target="#cartDrawer">
+          <i class="fa-solid fa-bag-shopping fs-5"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-magenta" id="cartBadge">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Banner -->
+  <header class="hero-section py-5 text-center text-white position-relative">
+    <div class="container position-relative z-2">
+      <span class="badge badge-hero mb-3 px-3 py-2"><i class="fa-solid fa-sparkles me-1"></i> New Season Arrivals 2026</span>
+      <h1 class="display-4 fw-extrabold mb-3">Discover Tomorrow's Trends Today</h1>
+      <p class="lead opacity-90 mx-auto max-w-600">Explore our dynamic curated collection powered by real-time inventory and instant filtering.</p>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="container my-5">
+    
+    <!-- Filter & Controls Bar -->
+    <div class="controls-card p-3 p-md-4 mb-4 rounded-4 shadow-sm bg-white">
+      <div class="row g-3 align-items-center">
+        <!-- Category Pills -->
+        <div class="col-lg-8">
+          <div class="category-pills-container d-flex flex-wrap gap-2" id="categoryContainer">
+            <button class="btn category-btn active" data-category="all">All Items</button>
+            <button class="btn category-btn" data-category="electronics">Electronics</button>
+            <button class="btn category-btn" data-category="jewelery">Jewelery</button>
+            <button class="btn category-btn" data-category="men's clothing">Men's Fashion</button>
+            <button class="btn category-btn" data-category="women's clothing">Women's Fashion</button>
+          </div>
+        </div>
+        
+        <!-- Sorting Dropdown -->
+        <div class="col-lg-4 d-flex align-items-center justify-content-lg-end gap-2">
+          <label for="sortSelect" class="form-label text-muted small fw-semibold text-nowrap mb-0"><i class="fa-solid fa-arrow-down-wide-short me-1"></i> Sort By:</label>
+          <select class="form-select custom-select w-auto" id="sortSelect">
+            <option value="default">Featured / Default</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Filters & Result Count Summary -->
+    <div class="d-flex justify-content-between align-items-center mb-4 px-1">
+      <div class="text-muted small fw-medium">
+        Showing <span class="fw-bold text-violet" id="resultsCount">0</span> items
+      </div>
+      <div id="activeFilterBadge" class="d-none">
+        <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+          Category: <span id="activeFilterName" class="text-violet fw-bold">All</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Product Grid Area -->
+    <div class="row g-4" id="productsGrid">
+      <!-- Skeleton Loading Placeholders -->
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-violet" role="status">
+          <span class="visually-hidden">Loading products...</span>
+        </div>
+        <p class="mt-3 text-muted">Fetching latest store inventory...</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Cart Offcanvas / Drawer -->
+  <div class="offcanvas offcanvas-end custom-cart-drawer" tabindex="-1" id="cartDrawer">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title fw-bold text-violet"><i class="fa-solid fa-bag-shopping me-2"></i> Your Shopping Bag</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column p-0">
+      <div class="cart-items-list flex-grow-1 p-3 overflow-y-auto" id="cartItemsList">
+        <!-- Cart items rendered dynamically -->
+      </div>
+      <div class="cart-footer border-top p-4 bg-light">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted fw-semibold">Subtotal</span>
+          <span class="fs-4 fw-extrabold text-violet" id="cartSubtotal">$0.00</span>
+        </div>
+        <button class="btn btn-checkout w-100 py-3 rounded-3 fw-bold text-uppercase" id="checkoutBtn">
+          Proceed To Checkout <i class="fa-solid fa-arrow-right ms-2"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Detail Modal -->
+  <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header border-0 pb-0 position-relative z-3">
+          <button type="button" class="btn-close me-2 mt-2" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 p-md-5" id="modalProductBody">
+          <!-- Dynamically populated product detail view -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- External JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  
+  <!-- Custom Application Script -->
+  <script src="script.js"></script>
+</body>
+</html>
